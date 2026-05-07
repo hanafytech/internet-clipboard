@@ -77,6 +77,16 @@ HTML_TEMPLATE = """
             margin-bottom: 20px; 
             font-weight: 500; 
         }
+        .info-box {
+            background-color: #0c2b4d;
+            color: #9ec5fe;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 5px solid #9ec5fe;
+            margin-top: 20px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 15px;
+        }
         h2 { 
             margin-top: 0; 
             color: #ffffff; 
@@ -86,22 +96,35 @@ HTML_TEMPLATE = """
             font-weight: 500;
             letter-spacing: 0.5px;
         }
+        p {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>/{{ path }}</h2>
-        {% if status == 'saved' %}
-            <div class="success">✅ Saved! Share this exact URL. The data will be destroyed the next time it is opened.</div>
-            <textarea readonly>{{ content }}</textarea>
-        {% elif content is not none %}
-            <div class="alert">⚠️ This message has been destroyed. If you refresh this page, it will be gone forever.</div>
-            <textarea readonly>{{ content }}</textarea>
+        {% if status == 'home' %}
+            <h2>Welcome to Secure Paste</h2>
+            <p>To create a secure, burn-after-reading paste, simply type a custom name at the end of your URL.</p>
+            <div class="info-box">
+                Example: <strong>yourdomain.com/secret123</strong>
+            </div>
         {% else %}
-            <form method="POST">
-                <textarea name="content" placeholder="Type or paste your text here..."></textarea>
-                <button type="submit">Save (Burn on Next Read)</button>
-            </form>
+            <h2>/{{ path }}</h2>
+            {% if status == 'saved' %}
+                <div class="success">✅ Saved! Share this exact URL. The data will be destroyed the next time it is opened.</div>
+                <textarea readonly>{{ content }}</textarea>
+            {% elif content is not none %}
+                <div class="alert">⚠️ This message has been destroyed. If you refresh this page, it will be gone forever.</div>
+                <textarea readonly>{{ content }}</textarea>
+            {% else %}
+                <form method="POST">
+                    <textarea name="content" placeholder="Type or paste your text here..."></textarea>
+                    <button type="submit">Save (Burn on Next Read)</button>
+                </form>
+            {% endif %}
         {% endif %}
     </div>
 </body>
@@ -111,15 +134,18 @@ HTML_TEMPLATE = """
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>', methods=['GET', 'POST'])
 def catch_all(path):
+    # Route for the root domain
     if not path:
-        return "Welcome to the Pastebin. Add a custom name to the end of the URL to create a paste. Example: yourdomain.com/secret123"
+        return render_template_string(HTML_TEMPLATE, path='', content=None, status='home')
 
+    # Route for saving a new paste
     if request.method == 'POST':
         content = request.form.get('content', '')
         if content.strip():
             db[path] = content
             return render_template_string(HTML_TEMPLATE, path=path, content=content, status='saved')
         
+    # Route for reading an existing paste
     if path in db:
         content = db.pop(path)
         return render_template_string(HTML_TEMPLATE, path=path, content=content, status='read')
