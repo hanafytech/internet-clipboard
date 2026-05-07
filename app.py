@@ -9,7 +9,7 @@ HTML_TEMPLATE = """
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secure Paste</title>
+    <title>internet-clipboard</title>
     <style>
         body { 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
@@ -106,7 +106,7 @@ HTML_TEMPLATE = """
 <body>
     <div class="container">
         {% if status == 'home' %}
-            <h2>Welcome to Secure Paste</h2>
+            <h2>Welcome to internet-clipboard</h2>
             <p>To create a secure, burn-after-reading paste, simply type a custom name at the end of your URL.</p>
             <div class="info-box">
                 Example: <strong>yourdomain.com/secret123</strong>
