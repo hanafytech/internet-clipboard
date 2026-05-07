@@ -1,5 +1,4 @@
 from flask import Flask, request, render_template_string
-import os
 
 app = Flask(__name__)
 db = {}
@@ -12,14 +11,81 @@ HTML_TEMPLATE = """
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Secure Paste</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; background-color: #f9f9f9; color: #333; }
-        .container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        textarea { width: 100%; height: 300px; font-family: monospace; padding: 10px; border: 1px solid #ccc; border-radius: 4px; resize: vertical; box-sizing: border-box; }
-        button { background-color: #007bff; color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 4px; margin-top: 15px; cursor: pointer; transition: background 0.2s; }
-        button:hover { background-color: #0056b3; }
-        .alert { background-color: #fff3cd; color: #856404; padding: 15px; border-radius: 4px; border-left: 4px solid #ffeeba; margin-bottom: 20px; font-weight: bold; }
-        .success { background-color: #d4edda; color: #155724; padding: 15px; border-radius: 4px; border-left: 4px solid #c3e6cb; margin-bottom: 20px; font-weight: bold; }
-        h2 { margin-top: 0; color: #222; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            max-width: 800px; 
+            margin: 40px auto; 
+            padding: 20px; 
+            background-color: #121212; 
+            color: #e0e0e0; 
+        }
+        .container { 
+            background: #1e1e1e; 
+            padding: 30px; 
+            border-radius: 10px; 
+            box-shadow: 0 8px 16px rgba(0,0,0,0.6); 
+        }
+        textarea { 
+            width: 100%; 
+            height: 300px; 
+            font-family: 'Courier New', Courier, monospace; 
+            padding: 15px; 
+            background-color: #2d2d2d; 
+            color: #f8f8f2; 
+            border: 1px solid #444; 
+            border-radius: 6px; 
+            resize: vertical; 
+            box-sizing: border-box; 
+            font-size: 15px;
+            line-height: 1.5;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25);
+        }
+        button { 
+            background-color: #0d6efd; 
+            color: white; 
+            border: none; 
+            padding: 12px 24px; 
+            font-size: 16px; 
+            font-weight: 600;
+            border-radius: 6px; 
+            margin-top: 15px; 
+            cursor: pointer; 
+            transition: background-color 0.2s ease-in-out; 
+        }
+        button:hover { 
+            background-color: #0b5ed7; 
+        }
+        .alert { 
+            background-color: #332701; 
+            color: #ffda6a; 
+            padding: 15px; 
+            border-radius: 6px; 
+            border-left: 5px solid #ffda6a; 
+            margin-bottom: 20px; 
+            font-weight: 500; 
+        }
+        .success { 
+            background-color: #0f291a; 
+            color: #75b798; 
+            padding: 15px; 
+            border-radius: 6px; 
+            border-left: 5px solid #75b798; 
+            margin-bottom: 20px; 
+            font-weight: 500; 
+        }
+        h2 { 
+            margin-top: 0; 
+            color: #ffffff; 
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
     </style>
 </head>
 <body>
